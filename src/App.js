@@ -1,5 +1,6 @@
 import './App.css';
 import Customer from './components/Customer';
+import {Table, TableHead, TableBody, TableRow, TableCell, Paper} from "@mui/material";
 
 const customers = [
   {
@@ -30,23 +31,37 @@ const customers = [
 
 function App() {
   return (
-    <div>
-      {
-        customers.map(c => {
-          return (
-            <Customer
-              key={c.id} 
-              id={c.id}
-              image={c.image}
-              name={c.name}
-              birthday={c.birthday}
-              gender={c.gender}
-              job={c.job}
-              />
-          );
-        })
-      }
-    </div>
+    <Paper>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>#</TableCell>
+              <TableCell>Image</TableCell>
+              <TableCell>Name</TableCell>
+              <TableCell>Birthday</TableCell>
+              <TableCell>Gender</TableCell>
+              <TableCell>Jop</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+          {
+            customers.map(c => {
+              return (
+                <Customer
+                  key={c.id} 
+                  id={c.id}
+                  image={c.image}
+                  name={c.name}
+                  birthday={c.birthday}
+                  gender={c.gender}
+                  job={c.job}
+                  />
+              );
+            })
+          }
+          </TableBody>
+        </Table>
+    </Paper>
   );
 }
 
