@@ -1,37 +1,30 @@
+import { Component } from 'react';
 import './App.css';
 import Customer from './components/Customer';
 import {Table, TableHead, TableBody, TableRow, TableCell, Paper} from "@mui/material";
 
-const customers = [
-  {
-    id: 1,
-    image: 'https://picsum.photos/200/150?1',
-    name: '홍길동',
-    birthday: '961222',
-    gender: '남자',
-    job: '대학생',
-  },
-  {
-    id: 2,
-    image: 'https://picsum.photos/200/150?2',
-    name: '이순신',
-    birthday: '930211',
-    gender: '남자',
-    job: '디자이너',
-  },
-  {
-    id: 3,
-    image: 'https://picsum.photos/200/150?3',
-    name: '트와이스',
-    birthday: '970303',
-    gender: '걸그룹',
-    job: '가수',
-  }
-];
+class App extends Component {
+  state = {
+    customers: ""
+  };
 
-function App() {
-  return (
-    <Paper>
+  componentDidMount() {
+    this.callApi()
+      .then(res => {
+        this.setState({customers: res})
+        .catch(err => console.log(err));
+      });
+  }
+
+  callApi = async () => {
+    const response = await fetch('/api/customers');
+    const body = await response.json();
+    return body;
+  }
+
+  render() {
+    return (
+      <Paper>
         <Table>
           <TableHead>
             <TableRow>
@@ -45,7 +38,8 @@ function App() {
           </TableHead>
           <TableBody>
           {
-            customers.map(c => {
+            this.state.customers ?
+            this.state.customers.map(c => {
               return (
                 <Customer
                   key={c.id} 
@@ -56,13 +50,17 @@ function App() {
                   gender={c.gender}
                   job={c.job}
                   />
-              );
-            })
+              )
+            }) : 
+            <TableRow>
+              <TableCell cellSpan={6}>데이터가 없습니다</TableCell>
+            </TableRow>
           }
           </TableBody>
         </Table>
     </Paper>
-  );
+    );
+  }
 }
 
 export default App;
