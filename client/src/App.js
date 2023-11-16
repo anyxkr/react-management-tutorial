@@ -2,24 +2,34 @@ import { Component } from 'react';
 import './App.css';
 import Customer from './components/Customer';
 import {Table, TableHead, TableBody, TableRow, TableCell, Paper} from "@mui/material";
+import Stack from '@mui/material/Stack';
+import CircularProgress from '@mui/material/CircularProgress';
 
 class App extends Component {
   state = {
-    customers: ""
+    customers: "",
+    completed: 0
   };
 
   componentDidMount() {
+    const timer = setInterval(this.progress, 120);
     this.callApi()
-      .then(res => {
-        this.setState({customers: res})
-        .catch(err => console.log(err));
-      });
+      .then(res => { 
+        this.setState({customers: res}); 
+        clearInterval(timer);
+      })
+      .catch(err => console.log(err));
   }
 
   callApi = async () => {
     const response = await fetch('/api/customers');
     const body = await response.json();
     return body;
+  }
+
+  progress = () => {
+    const { completed } = this.state;
+    this.setState({ completed: completed >= 100 ? 0 : completed + 15 });
   }
 
   render() {
@@ -53,7 +63,11 @@ class App extends Component {
               )
             }) : 
             <TableRow>
-              <TableCell cellSpan={6}>데이터가 없습니다</TableCell>
+              <TableCell colSpan={6} align="center">
+                <Stack spacing={2} direction="row">
+                  <CircularProgress variant="determinate" value={this.state.completed} />
+                </Stack>
+              </TableCell>
             </TableRow>
           }
           </TableBody>
